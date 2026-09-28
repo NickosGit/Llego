@@ -193,3 +193,9 @@ export function minutes(n: number): string {
 export function percent(p: number): string {
   return `${Math.round(p * 100)}%`;
 }
+
+/** Hora (0–23) de un instante en la Ciudad de México. */
+export function mexicoHour(at: Date): number {
+  const h = new Intl.DateTimeFormat("en-US", { timeZone: TIME_ZONE, hour: "2-digit", hourCycle: "h23" }).format(at);
+  return Number(h) % 24;
+}

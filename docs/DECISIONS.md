@@ -51,3 +51,15 @@ Una línea por decisión, con el porqué. Lo más nuevo va abajo.
 - La contradicción se compara con el p50 de la **hora actual**, no con la salida que se está consultando (que suele ser mañana): los reportes son de ahora.
 - `/revision`: el rol se comprueba con `is_reviewer()` en la página y en la server action, y RLS lo vuelve a exigir. Un pasajero es redirigido a `/corredor`. Solo "Confirmar"/"Descartar" + nota: ninguna acción de sanción ni despacho.
 - T4 y T5 se prueban en tres capas: PGlite (`tests/db`), lógica de la franja (`tests/live.test.ts`) y el Supabase real (`npm run db:live`, cuentas `*.llego.test`). Como a las 23 h no hay predicción, `test_live.ts` crea una temporal para la hora actual (p50 = 6) y la borra al final; nunca toca las de 4–9 h.
+
+## Commit 5: registro de viajes con GPS en el teléfono + Mis viajes
+
+- La detección vive en `lib/trip.ts` como máquina de estados pura (probada sin teléfono). Espera = de "Empezar" a subirse; se da por subido tras **2 lecturas seguidas a más de 100 m** (80 m + 20 de margen) de la parada, para que el ruido del GPS no cuente como abordar; también hay botón "Ya me subí". Llegada = dentro de 80 m del destino. Se ignoran lecturas con precisión peor que 100 m.
+- "Terminar" (o llegar) apaga `watchPosition`, calcula minutos y **vacía el recorrido de memoria antes** de preguntar el asiento y subir nada. `tripPayload()` es una lista blanca de 7 campos: aunque le pasen coordenadas, no salen (T7, probado en unidad y en Playwright leyendo el cuerpo real del POST).
+- El consentimiento se guarda en el teléfono (`useSyncExternalStore` + localStorage, con copia en memoria si no hay almacenamiento). "Ahora no" lleva al modo manual; se puede volver a GPS.
+- **Desviación menor del prompt**: el modo manual tiene las dos horas pedidas ("Llegué a la parada", "Me subí") **más** un selector "¿Cuánto duró el viaje?", porque `ride_min` es obligatorio y dos horas solo dan la espera. Pendiente confirmarlo con Nico.
+- La hora y el tipo de día del viaje salen del momento de "Empezar" en hora de CDMX (UTC-6 todo el año desde 2022).
+- Subida (T8): un reintento a los 2 s si falla la red; un rechazo de la base (código Postgres) no se reintenta. Si fallan los dos intentos, el viaje queda en el teléfono y `PendingTrips` lo manda en la próxima visita o al volver la señal.
+- `/corredor` corta la consulta de predicciones a los 4 s (`abortSignal`), así que con mala señal el cliente muestra su copia guardada en vez de dejar la pantalla colgada.
+- Mis viajes: solo los propios (RLS) y botón Borrar con confirmación (a una mano es fácil tocar de más). El borrado es real (`delete`), así que el viaje queda fuera en el siguiente `train.py` (T10).
+- e2e con GPS simulado de Playwright (`setGeolocation`): consentimiento → Empezar → alejarse → llegar a D → asiento → payload → Mis viajes → borrar.

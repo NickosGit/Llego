@@ -92,3 +92,11 @@ describe("pronóstico", () => {
     expect(toneFor(p({ wait_p50: 13.5 }))).toBe("bad");
   });
 });
+
+describe("mexicoHour", () => {
+  it("convierte a la hora de CDMX", async () => {
+    const { mexicoHour } = await import("@/lib/forecast");
+    expect(mexicoHour(new Date("2026-09-29T11:10:00Z"))).toBe(5);
+    expect(mexicoHour(new Date("2026-09-29T06:00:00Z"))).toBe(0);
+  });
+});

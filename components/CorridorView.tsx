@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 
 import {
@@ -144,6 +145,13 @@ export function CorridorView({
       )}
 
       <LiveReports stop={from} />
+
+      <Link
+        href={`/viaje?from=${from}&to=${to}`}
+        className="sticky bottom-3 mt-2 rounded-2xl bg-navy py-5 text-center text-2xl font-extrabold text-white shadow-lg"
+      >
+        Registrar mi viaje
+      </Link>
 
       {children}
     </div>
