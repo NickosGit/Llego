@@ -68,3 +68,10 @@ Una línea por decisión, con el porqué. Lo más nuevo va abajo.
 ## Fixes después del commit 5
 
 - **fix: salida por defecto = la próxima 5:10.** Antes era siempre "mañana 5:10": abierta a las 4:15 de un viernes mostraba el sábado (fin de semana). Ahora es "hoy" si en CDMX todavía no son las 5:10. `now` viene del servidor para que SSR y cliente coincidan.
+
+## Cierre de sesión (2026-09-27)
+
+- Hecho: commits 1–5, fix de la salida por defecto, 2 deploys + redeploy del fix. T1–T10 ✅ en producción (`docs/TEST_LOG.md`).
+- Datos de prueba en el Supabase compartido: 4 cuentas `*.llego.test` (sin correo), reportes de prueba en la parada C (vencen solos en 2 h; se borran a los 30 días) y 1 caso de revisión confirmado con nota "Prueba: …".
+- Sin remoto de git todavía: el push queda pendiente hasta crear el repo en GitHub.
+- **Mañana primero:** ① agregar `https://llego-sigma.vercel.app/**` en Supabase → Auth → Redirect URLs (sin eso, el magic link en producción rebota al Site URL de consent-log); ② correr el persona test en un chat nuevo y hacer el `fix(ux)` del peor hallazgo; ③ confirmar con Rodolfo las paradas reales (solo editar `config/corridor.ts` + `npm run db:stops`) y conseguir su frase textual; ④ confirmar el tercer campo del registro manual (duración del viaje).
