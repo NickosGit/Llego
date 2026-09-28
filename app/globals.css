@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+/*
+ * Una sola paleta clara y de alto contraste: se usa de madrugada, en la
+ * parada, con el brillo del teléfono bajo. No hay modo oscuro a propósito.
+ */
+:root {
+  --background: #f4f6f8;
+  --foreground: #111111;
+  --muted: #555b63;
+  --card: #ffffff;
+  --navy: #14345a;
+  --ok: #2e9e44;
+  --warn: #f29d0b;
+  --bad: #e03131;
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-card: var(--card);
+  --color-navy: var(--navy);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-bad: var(--bad);
+}
+
+html {
+  /* Texto grande por defecto: 18px base. */
+  font-size: 18px;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+}
+
+/* Botones y controles cómodos para un pulgar. */
+button,
+select,
+input {
+  min-height: 48px;
+}
