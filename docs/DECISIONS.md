@@ -41,3 +41,13 @@ Una línea por decisión, con el porqué. Lo más nuevo va abajo.
 - Mapa estático (`interactive: false`): se usa a una mano y no debe robarse el scroll. Sin servidor de fuentes: las dos etiquetas son HTML. Teselas OSM raster sin llave, con atribución.
 - Playwright usa el Edge instalado (`channel: "msedge"`), así que no descarga navegadores. Entra con una cuenta de prueba mediante `scripts/login_link.ts` (token_hash de un solo uso, sin correo).
 - `package.json` con `"type": "module"`: los scripts de Node usan top-level await e importan `config/corridor.ts` directo.
+- 🚀 **Deploy 1** (después del commit 3): https://llego-sigma.vercel.app. En Vercel solo están `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY`; la service role nunca sale de `.env.local`. `.vercelignore` excluye `.env*` y el venv. Playwright pasó contra producción.
+
+## Commit 4: reportes en vivo, k-umbral, cola de revisión
+
+- Los reportes son de la **parada de subida** elegida (Desde). El cliente inserta directo con supabase-js para que el payload visible en DevTools sea exactamente `{"stop_id","kind"}` (verificado: `{"stop_id":"A","kind":"full"}`). Una server action mandaría un cuerpo opaco.
+- La franja pide `live_reports_agg()` y `flag_contradiction(stop)` al cargar. El k-umbral se aplica en la base y otra vez en `lib/live.ts` por si algo se colara.
+- Si el caso se abrió por la regla (b) (viajes rápidos, sin reportes), la franja aparece igual con "Los viajes recientes no coinciden con el pronóstico" + `en revisión`: si no, la etiqueta quedaría invisible.
+- La contradicción se compara con el p50 de la **hora actual**, no con la salida que se está consultando (que suele ser mañana): los reportes son de ahora.
+- `/revision`: el rol se comprueba con `is_reviewer()` en la página y en la server action, y RLS lo vuelve a exigir. Un pasajero es redirigido a `/corredor`. Solo "Confirmar"/"Descartar" + nota: ninguna acción de sanción ni despacho.
+- T4 y T5 se prueban en tres capas: PGlite (`tests/db`), lógica de la franja (`tests/live.test.ts`) y el Supabase real (`npm run db:live`, cuentas `*.llego.test`). Como a las 23 h no hay predicción, `test_live.ts` crea una temporal para la hora actual (p50 = 6) y la borra al final; nunca toca las de 4–9 h.

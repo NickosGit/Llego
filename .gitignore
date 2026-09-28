@@ -56,3 +56,6 @@ scripts/out/
 
 # worker de MapLibre copiado en predev/prebuild
 /public/maplibre/
+
+.vercel
+.env*

@@ -21,3 +21,12 @@ test("camino feliz: login → corredor → tarjeta del pronóstico", async ({ pa
   await expect(page.getByTestId("confidence-pill")).toHaveText(/Buen dato · \d+ viajes|Poco dato · \d+ viajes|Sin dato/);
   await expect(page.getByTestId("corridor-map")).toBeVisible();
 });
+
+test("/revision: un pasajero es redirigido; el revisor entra", async ({ page, baseURL }) => {
+  await page.goto(await loginLink("a", baseURL!, "/revision"));
+  await expect(page).toHaveURL(/\/corredor$/);
+
+  await page.goto(await loginLink("reviewer", baseURL!, "/revision"));
+  await expect(page).toHaveURL(/\/revision$/);
+  await expect(page.getByRole("heading", { name: "Revisión" })).toBeVisible();
+});

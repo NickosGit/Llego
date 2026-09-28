@@ -14,7 +14,8 @@
     "test:e2e": "playwright test",
     "db:stops": "node --env-file=.env.local scripts/sync_stops.ts",
     "db:rls": "node --env-file=.env.local scripts/test_rls.ts",
-    "db:reviewer": "node --env-file=.env.local scripts/set_reviewer.ts"
+    "db:reviewer": "node --env-file=.env.local scripts/set_reviewer.ts",
+    "db:live": "node --env-file=.env.local scripts/test_live.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

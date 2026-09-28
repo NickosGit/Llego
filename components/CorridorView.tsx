@@ -31,6 +31,7 @@ import { usePredictions } from "@/lib/use-predictions";
 
 import { CorridorMap, MapLegend } from "./CorridorMap";
 import { ForecastCard } from "./ForecastCard";
+import { LiveReports } from "./LiveReports";
 
 const selectClass =
   "w-full rounded-xl border-2 border-gray-300 bg-white px-3 text-lg font-semibold text-foreground";
@@ -141,6 +142,8 @@ export function CorridorView({
             : "Todavía no hay pronóstico. Si tienes mala señal, intenta de nuevo en un momento."}
         </p>
       )}
+
+      <LiveReports stop={from} />
 
       {children}
     </div>
