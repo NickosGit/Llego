@@ -50,3 +50,6 @@ __pycache__/
 /test-results/
 /playwright-report/
 /playwright/.cache/
+
+# salidas locales de scripts
+scripts/out/
