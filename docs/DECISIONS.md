@@ -74,4 +74,5 @@ Una línea por decisión, con el porqué. Lo más nuevo va abajo.
 - Hecho: commits 1–5, fix de la salida por defecto, 2 deploys + redeploy del fix. T1–T10 ✅ en producción (`docs/TEST_LOG.md`).
 - Datos de prueba en el Supabase compartido: 4 cuentas `*.llego.test` (sin correo), reportes de prueba en la parada C (vencen solos en 2 h; se borran a los 30 días) y 1 caso de revisión confirmado con nota "Prueba: …".
 - Repo: https://github.com/NickosGit/Llego (push hecho al cerrar la sesión).
-- **Mañana primero:** ① agregar `https://llego-sigma.vercel.app/**` en Supabase → Auth → Redirect URLs (sin eso, el magic link en producción rebota al Site URL de consent-log); ② correr el persona test en un chat nuevo y hacer el `fix(ux)` del peor hallazgo; ③ confirmar con Rodolfo las paradas reales (solo editar `config/corridor.ts` + `npm run db:stops`) y conseguir su frase textual; ④ confirmar el tercer campo del registro manual (duración del viaje).
+- ✅ Redirect URL de producción agregada en Supabase (verificado: el enlace redirige a `llego-sigma.vercel.app/auth/callback`).
+- **Mañana primero:** ② correr el persona test en un chat nuevo y hacer el `fix(ux)` del peor hallazgo; ③ confirmar con Rodolfo las paradas reales (solo editar `config/corridor.ts` + `npm run db:stops`) y conseguir su frase textual; ④ confirmar el tercer campo del registro manual (duración del viaje).
