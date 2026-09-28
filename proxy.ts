@@ -50,5 +50,5 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   // Todo menos estáticos de Next e imágenes.
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|svg|ico|webmanifest)$).*)"],
+  matcher: ["/((?!_next/static|_next/image|maplibre/|favicon.ico|.*\\.(?:png|jpg|svg|ico|webmanifest)$).*)"],
 };

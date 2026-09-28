@@ -2,7 +2,10 @@
   "name": "llego",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
+    "predev": "node scripts/copy_map_worker.mjs",
+    "prebuild": "node scripts/copy_map_worker.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

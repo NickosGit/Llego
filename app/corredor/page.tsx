@@ -1,17 +1,17 @@
-import { STOPS } from "@/config/corridor";
+import { CorridorView } from "@/components/CorridorView";
+import { TopNav } from "@/components/TopNav";
+import { createClient } from "@/lib/supabase/server";
+import { PREDICTION_COLUMNS, type Prediction } from "@/lib/types";
 
-/** Pantalla del corredor. El pronóstico llega en el commit 3. */
-export default function CorredorPage() {
+export default async function CorredorPage() {
+  const supabase = await createClient();
+  // Son 36 filas: se traen todas y el cambio de parada u hora no toca la red.
+  const { data, error } = await supabase.from("predictions").select(PREDICTION_COLUMNS);
+
   return (
-    <main className="flex flex-1 flex-col gap-4 pt-6">
-      <h1 className="text-3xl font-extrabold leading-tight">¿Llego? Atizapán → El Rosario</h1>
-      <ol className="space-y-2 text-lg">
-        {STOPS.map((s) => (
-          <li key={s.id}>
-            {s.id} · {s.name}
-          </li>
-        ))}
-      </ol>
+    <main className="flex flex-1 flex-col gap-4 pt-3">
+      <TopNav />
+      <CorridorView initial={error ? null : ((data as Prediction[]) ?? null)} nowIso={new Date().toISOString()} />
     </main>
   );
 }

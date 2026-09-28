@@ -28,3 +28,16 @@ Una línea por decisión, con el porqué. Lo más nuevo va abajo.
 - La espera de un viaje se atribuye al tramo que empieza en su parada de origen (A→D entrena AB): se espera en la parada donde uno sube.
 - Pruebas de base de datos con PGlite (Postgres 18 en WASM) + stub mínimo de Supabase (`auth.uid()`, roles). Corren en `npm test` sin red. T2 también tiene versión contra el Supabase real (`npm run db:rls`, 2 cuentas `*.llego.test` creadas con la API admin, sin correos).
 - `purge_old_reports()` (retención de 30 días) la llama `train.py` en cada corrida, en vez de depender de pg_cron.
+
+## Commit 3: pronóstico con mapa y etiquetas de confianza
+
+- `/corredor` trae las 36 predicciones de una vez: cambiar parada u hora no toca la red y todo el set cabe en caché.
+- Caché del último set bueno en memoria + localStorage (`lib/prediction-cache.ts`); si el servidor no las trae, se muestra la copia con aviso "Sin conexión" y se reintenta una vez desde el navegador (base de T8).
+- ≤ 3 taps: tres selects grandes (Desde, Hasta, Salida) con A→D y "mañana 5:10" por defecto, así que para Rodolfo son 0 taps. "Hoy" y "mañana" van dentro del select de salida para no agregar un cuarto control.
+- Espera y asiento del pronóstico = los del tramo donde uno sube (el origen). El mapa colorea todos los tramos a esa hora.
+- Colores: verde < 10 min, ámbar 10–13, rojo ≥ 14, gris si la celda es "Sin dato" (no pintamos verde algo sin respaldo).
+- **Bug encontrado en la prueba visual**: con p50 = 9.5 el tramo salía verde ("< 10") y la tarjeta decía "10 min". El color ahora usa los minutos ya redondeados. Prueba de regresión en `tests/forecast.test.ts`.
+- MapLibre v6 busca su worker junto a su módulo y el bundler de Next no conserva esa ruta ("Worker failed to load"). Se copia a `public/maplibre/` en `predev`/`prebuild` y se usa `setWorkerUrl`. El proxy no intercepta `/maplibre/`.
+- Mapa estático (`interactive: false`): se usa a una mano y no debe robarse el scroll. Sin servidor de fuentes: las dos etiquetas son HTML. Teselas OSM raster sin llave, con atribución.
+- Playwright usa el Edge instalado (`channel: "msedge"`), así que no descarga navegadores. Entra con una cuenta de prueba mediante `scripts/login_link.ts` (token_hash de un solo uso, sin correo).
+- `package.json` con `"type": "module"`: los scripts de Node usan top-level await e importan `config/corridor.ts` directo.
