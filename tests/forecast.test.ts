@@ -100,3 +100,23 @@ describe("mexicoHour", () => {
     expect(mexicoHour(new Date("2026-09-29T06:00:00Z"))).toBe(0);
   });
 });
+
+describe("salida por defecto = la próxima 5:10", () => {
+  it("viernes 4:15 am en CDMX: es HOY 5:10 (laboral), no mañana sábado", async () => {
+    const { defaultDeparture, resolveDeparture } = await import("@/lib/forecast");
+    const now = new Date("2026-10-02T10:15:00Z"); // viernes 4:15 CDMX
+    const dep = defaultDeparture(now);
+    expect(dep).toEqual({ day: "hoy", time: "05:10" });
+    expect(resolveDeparture(dep, now)).toMatchObject({ daytype: "weekday", weekdayName: "viernes" });
+  });
+
+  it("viernes 6:00 am: la próxima es mañana (sábado)", async () => {
+    const { defaultDeparture } = await import("@/lib/forecast");
+    expect(defaultDeparture(new Date("2026-10-02T12:00:00Z"))).toEqual({ day: "manana", time: "05:10" });
+  });
+
+  it("domingo 23:00: mañana lunes", async () => {
+    const { defaultDeparture } = await import("@/lib/forecast");
+    expect(defaultDeparture(new Date("2026-09-28T05:00:00Z"))).toEqual({ day: "manana", time: "05:10" });
+  });
+});

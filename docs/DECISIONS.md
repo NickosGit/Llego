@@ -63,3 +63,8 @@ Una línea por decisión, con el porqué. Lo más nuevo va abajo.
 - `/corredor` corta la consulta de predicciones a los 4 s (`abortSignal`), así que con mala señal el cliente muestra su copia guardada en vez de dejar la pantalla colgada.
 - Mis viajes: solo los propios (RLS) y botón Borrar con confirmación (a una mano es fácil tocar de más). El borrado es real (`delete`), así que el viaje queda fuera en el siguiente `train.py` (T10).
 - e2e con GPS simulado de Playwright (`setGeolocation`): consentimiento → Empezar → alejarse → llegar a D → asiento → payload → Mis viajes → borrar.
+- 🚀 **Deploy 2** (después del commit 5): misma URL. Pasada T1–T10 completa contra producción: todo ✅ (ver `docs/TEST_LOG.md`).
+
+## Fixes después del commit 5
+
+- **fix: salida por defecto = la próxima 5:10.** Antes era siempre "mañana 5:10": abierta a las 4:15 de un viernes mostraba el sábado (fin de semana). Ahora es "hoy" si en CDMX todavía no son las 5:10. `now` viene del servidor para que SSR y cliente coincidan.

@@ -13,8 +13,8 @@ import {
   type StopId,
 } from "@/config/corridor";
 import {
-  DEFAULT_DEPARTURE,
   decodeDeparture,
+  defaultDeparture,
   departureTimes,
   displayTime,
   encodeDeparture,
@@ -49,7 +49,7 @@ export function CorridorView({
   const now = useMemo(() => new Date(nowIso), [nowIso]);
   const [from, setFrom] = useState<StopId>(DEFAULT_FROM);
   const [to, setTo] = useState<StopId>(DEFAULT_TO);
-  const [departure, setDeparture] = useState<Departure>(DEFAULT_DEPARTURE);
+  const [departure, setDeparture] = useState<Departure>(() => defaultDeparture(now));
   const { preds, source, savedAt } = usePredictions(initial);
 
   const { daytype, hour, weekdayName: dayName } = resolveDeparture(departure, now);

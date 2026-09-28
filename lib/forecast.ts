@@ -50,6 +50,27 @@ export type Departure = {
 
 export const DEFAULT_DEPARTURE: Departure = { day: "manana", time: "05:10" };
 
+/** Minutos desde medianoche en la Ciudad de México. */
+export function mexicoMinutes(at: Date): number {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: TIME_ZONE,
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  }).formatToParts(at);
+  const get = (t: string) => Number(parts.find((p) => p.type === t)?.value);
+  return (get("hour") % 24) * 60 + get("minute");
+}
+
+/**
+ * La PRÓXIMA salida de las 5:10: hoy si todavía no son las 5:10, si no mañana.
+ * (Rodolfo abre la app a las 4 am: "mañana 5:10" le mostraba el día siguiente.)
+ */
+export function defaultDeparture(now: Date): Departure {
+  const [h, m] = DEFAULT_DEPARTURE.time.split(":").map(Number);
+  return mexicoMinutes(now) < h * 60 + m ? { ...DEFAULT_DEPARTURE, day: "hoy" } : DEFAULT_DEPARTURE;
+}
+
 /** Salidas cada 10 min entre la primera y la última hora del modelo. */
 export function departureTimes(): string[] {
   return HOURS.flatMap((h) =>
